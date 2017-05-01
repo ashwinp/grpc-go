@@ -54,10 +54,10 @@ import (
 )
 
 var (
-	tlsFlag    = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
-	peerCert   = flag.String("peer_cert_file", "testdata/keys/client-cert.pem", "The peer TLS cert file")
-	caCert     = flag.String("ca_cert_file", "testdata/keys/ca-cert.pem", "The CA root cert file")
-	peerKey    = flag.String("peer_key_file", "testdata/keys/client-key.pem", "The peer TLS key file")
+	tlsFlag            = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
+	clientCert         = flag.String("peer_cert_file", "testdata/keys/client-cert.pem", "The peer TLS cert file")
+	caCert             = flag.String("ca_cert_file", "testdata/keys/ca-cert.pem", "The CA root cert file")
+	clientKey          = flag.String("peer_key_file", "testdata/keys/client-key.pem", "The peer TLS key file")
 	serverAddr         = flag.String("server_addr", "127.0.0.1:10000", "The server address in the format of host:port")
 	serverHostOverride = flag.String("server_host_override", "www.example.com", "The server name use to verify the hostname returned by TLS handshake")
 )
@@ -167,7 +167,7 @@ func main() {
 	var opts []grpc.DialOption
 	if *tlsFlag {
 		// load peer cert/key, cacert
-		peerCert, err := tls.LoadX509KeyPair(*peerCert, *peerKey)
+		peerCert, err := tls.LoadX509KeyPair(*clientCert, *clientKey)
 		if err != nil {
 			grpclog.Println("load peer cert/key error:%v", err)
 			return

@@ -62,11 +62,9 @@ import (
 
 var (
 	tlsFlag    = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
-	certFile   = flag.String("cert_file", "testdata/keys/server-cert.pem", "The server TLS cert file")
-	peerCert   = flag.String("peer_cert_file", "testdata/keys/client-cert.pem", "The peer TLS cert file")
+	serverCert = flag.String("cert_file", "testdata/keys/server-cert.pem", "The server TLS cert file")
 	caCert     = flag.String("ca_cert_file", "testdata/keys/ca-cert.pem", "The CA root cert file")
-	peerKey    = flag.String("peer_key_file", "testdata/keys/client-key.pem", "The peer TLS key file")
-	keyFile    = flag.String("key_file", "testdata/keys/server-key.pem", "The server TLS key file")
+	serverKey  = flag.String("key_file", "testdata/keys/server-key.pem", "The server TLS key file")
 	jsonDBFile = flag.String("json_db_file", "testdata/route_guide_db.json", "A json file containing a list of features")
 	port       = flag.Int("port", 10000, "The server port")
 )
@@ -234,7 +232,7 @@ func main() {
 
 	if *tlsFlag {
 		// load peer cert/key, ca cert
-		peerCert, err := tls.LoadX509KeyPair(*peerCert, *peerKey)
+		peerCert, err := tls.LoadX509KeyPair(*serverCert, *serverKey)
 		if err != nil {
 			grpclog.Println("load peer cert/key error:%v", err)
 			return
