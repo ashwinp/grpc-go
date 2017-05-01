@@ -2,6 +2,11 @@
 The route guide server and client demonstrate how to use grpc go libraries to
 perform unary, client streaming, server streaming and full duplex RPCs.
 
+# CHANGES:
+
+The example has been modified to perform mutual authentication between the client and the server.
+# -------
+
 Please refer to [gRPC Basics: Go] (http://www.grpc.io/docs/tutorials/basic/go.html) for more information.
 
 See the definition of the route guide service in proto/route_guide.proto.
@@ -33,3 +38,17 @@ and
 ```sh
 $ go run client/client.go -tls=true
 ```
+
+# Optional resources
+Generate self-signed client and server certs for testing.
+```sh
+$ openssl genrsa -out ca-key.pem 2048;
+$ openssl req -new -x509 -nodes -days 1000 -key ca-key.pem -out ca-cert.pem;
+$ openssl req -newkey rsa:2048 -days 1000 -nodes -keyout server-key.pem -out server-req.pem;
+$ openssl x509 -req -in server-req.pem -days 1000 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem;
+$ openssl req -newkey rsa:2048 -days 1000 -nodes -keyout client-key.pem -out client-req.pem;
+$ openssl x509 -req -in client-req.pem -days 1000 -CA ca-cert.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem;
+```sh
+
+SSL/TLS mutual authentication:
+Link: https://github.com/grpc/grpc-go/issues/403
